@@ -1,5 +1,6 @@
 package com.example.tpi_grupo58.Entidades;
 
+import com.example.tpi_grupo58.Entidades.dtos.MarcaDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,4 +24,9 @@ public class Marca {
 
     @OneToMany(mappedBy = "idMarca", fetch = FetchType.LAZY)
     private List<Modelo> modelos;
+
+    public Marca(Integer id, String nombre){
+        this.id = id;
+        this.nombre = nombre;
+    }
 }

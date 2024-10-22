@@ -44,4 +44,17 @@ public class Interesado {
     @OneToMany(mappedBy = "idInteresado", fetch = FetchType.LAZY)
     private List<Prueba> pruebas;
 
+    public Interesado(Integer id, String tipoDocumento, String documento,
+                      String nombre, String apellido, Integer restringido,
+                      Integer nroLicencia, LocalDateTime fechaVencimientoLicencia){
+        this.id = id;
+        this.tipoDocumento = tipoDocumento;
+        this.documento = documento;
+        this.nombre = nombre;
+        this.apellido = apellido;
+        this.restringido = restringido;
+        this.nroLicencia = nroLicencia;
+        this.fechaVencimientoLicencia = fechaVencimientoLicencia;
+    }
+
 }

@@ -28,5 +28,11 @@ public class Modelo {
     @OneToMany(mappedBy = "idModelo", fetch = FetchType.LAZY)
     private List<Vehiculo> vehiculos;
 
+    public Modelo(Integer id, Marca idMarca, String descripcion){
+        this.id = id;
+        this.idMarca = idMarca;
+        this.descripcion = descripcion;
+    }
+
 
 }
