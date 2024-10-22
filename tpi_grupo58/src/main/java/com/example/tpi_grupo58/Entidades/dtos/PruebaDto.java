@@ -1,5 +1,6 @@
 package com.example.tpi_grupo58.Entidades.dtos;
 
+import com.example.tpi_grupo58.Entidades.Modelo;
 import com.example.tpi_grupo58.Entidades.Prueba;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,5 +25,10 @@ public class PruebaDto {
         fechaHoraInicio = prueba.getFechaHoraInicio();
         fechaHoraFin = prueba.getFechaHoraFin();
         comentarios = prueba.getComentarios();
+    }
+
+    public Prueba toPrueba(){
+        return new Prueba(id, idVehiculo.toVehiculo(), idInteresado.toInteresado(),
+                idEmpleado.toEmpleado(), fechaHoraInicio, fechaHoraFin, comentarios);
     }
 }

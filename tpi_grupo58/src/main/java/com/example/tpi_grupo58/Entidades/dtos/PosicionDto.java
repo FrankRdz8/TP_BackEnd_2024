@@ -23,4 +23,8 @@ public class PosicionDto {
         latitud = posicion.getLatitud();
         longitud = posicion.getLongitud();
     }
+
+    public Posicion toPosicion(){
+        return new Posicion(id, idVehiculo.toVehiculo(), fechaHora, latitud, longitud);
+    }
 }

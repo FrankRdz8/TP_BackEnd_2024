@@ -32,4 +32,9 @@ public class Vehiculo {
     private List<Posicion> posiciones;
 
 
+    public Vehiculo(Integer id, String patente, Modelo modelo) {
+        this.id = id;
+        this.patente = patente;
+        this.idModelo = modelo;
+    }
 }

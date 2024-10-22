@@ -16,4 +16,8 @@ public class VehiculoDto {
         patente = vehiculo.getPatente();
         idModelo = new ModeloDto(vehiculo.getIdModelo());
     }
+
+    public Vehiculo toVehiculo() {
+        return new Vehiculo(id, patente, idModelo.toModelo());
+    }
 }
