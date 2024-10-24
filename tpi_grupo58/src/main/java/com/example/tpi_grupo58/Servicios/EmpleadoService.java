@@ -6,6 +6,7 @@ import com.example.tpi_grupo58.Repositorios.EmpleadoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmpleadoService {
@@ -20,6 +21,9 @@ public class EmpleadoService {
     public List<EmpleadoDto> getAll(){
         return empleadoRepository.findAll().stream().map(empleado -> new EmpleadoDto(empleado)).toList();
     }
+
+
+
 
 
 }

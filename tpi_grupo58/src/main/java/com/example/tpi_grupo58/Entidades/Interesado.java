@@ -19,7 +19,7 @@ public class Interesado {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "TIPO_DOCUMENTO", nullable = false, length = 3, columnDefinition = "varchar(3) default 'DNI'")
+    @Column(name = "TIPO_DOCUMENTO", nullable = false)
     private String tipoDocumento;
 
     @Column(name = "DOCUMENTO", nullable = false, length = 10)
@@ -34,7 +34,7 @@ public class Interesado {
     @Column(name = "RESTRINGIDO", nullable = false, columnDefinition = "boolean default 'false'")
     private Integer restringido;
 
-    @Column(name = "NRO_LICENCIA", nullable = false)
+    @Column(name = "NRO_LICENCIA", nullable = false, unique = true)
     private Integer nroLicencia;
 
     @Column(name = "FECHA_VENCIMIENTO_LICENCIA", nullable = false)
@@ -55,6 +55,13 @@ public class Interesado {
         this.restringido = restringido;
         this.nroLicencia = nroLicencia;
         this.fechaVencimientoLicencia = fechaVencimientoLicencia;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (this.tipoDocumento == null) {
+            this.tipoDocumento = "DNI";
+        }
     }
 
 }
