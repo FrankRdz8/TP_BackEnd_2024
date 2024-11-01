@@ -5,10 +5,7 @@ import com.example.tpi_grupo58.Entidades.dtos.InteresadoDto;
 import com.example.tpi_grupo58.Entidades.dtos.PruebaDto;
 import com.example.tpi_grupo58.Entidades.dtos.VehiculoDto;
 import com.example.tpi_grupo58.Repositorios.PruebaRepository;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import com.example.tpi_grupo58.Servicios.ErrorResponse;
 
 
 import java.time.LocalDateTime;
@@ -41,7 +38,7 @@ public class PruebaService {
         Optional<VehiculoDto> vehiculo = vehiculoService.getById(pruebaDto.getIdVehiculo().getId());
 
         // Buscar interesado sin licencia vencida y no restringido
-        /*if (interesado.get().getFechaVencimientoLicencia().isAfter(LocalDateTime.now())){
+        if (interesado.get().getFechaVencimientoLicencia().isAfter(LocalDateTime.now())){
             // Return licencia vencida
             return null;
         }
@@ -68,29 +65,16 @@ public class PruebaService {
         if (pruebaClienteActivo){
             // Retornar que el cliente esta haciendo una prueba
             return null;
-        }*/
+        }
 
         // Seteo
-        VehiculoDto vehiculoDto = new VehiculoDto(vehiculo.get().getId(),
-                vehiculo.get().getPatente(), vehiculo.get().getIdModelo());
-        pruebaDto.setIdVehiculo(vehiculoDto);
-
-        InteresadoDto interesadoDto = new InteresadoDto(interesado.get().getId(),
-                interesado.get().getTipoDocumento(), interesado.get().getDocumento(),
-                interesado.get().getNombre(), interesado.get().getApellido(),
-                interesado.get().getRestringido(), interesado.get().getNroLicencia(),
-                interesado.get().getFechaVencimientoLicencia());
-        pruebaDto.setIdInteresado(interesadoDto);
-
-        EmpleadoDto empleadoDto = new EmpleadoDto(empleado.get().getLegajo(),
-                empleado.get().getNombre(), empleado.get().getApellido(),
-                empleado.get().getTelefonoContacto());
-        pruebaDto.setIdEmpleado(empleadoDto);
+        pruebaDto.setIdVehiculo(vehiculo.get());
+        pruebaDto.setIdInteresado(interesado.get());
+        pruebaDto.setIdEmpleado(empleado.get());
 
         pruebaDto.setFechaHoraInicio(LocalDateTime.now());
         pruebaDto.setFechaHoraFin(null);
         pruebaDto.setComentarios(null);
-
 
         return new PruebaDto(pruebaRepository.save(pruebaDto.toPrueba()));
     }

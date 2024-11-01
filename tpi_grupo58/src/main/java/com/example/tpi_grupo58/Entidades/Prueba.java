@@ -18,15 +18,15 @@ public class Prueba {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "ID_VEHICULO", referencedColumnName = "ID")
     private Vehiculo idVehiculo;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "ID_INTERESADO", referencedColumnName = "ID")
     private Interesado idInteresado;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "ID_EMPLEADO", referencedColumnName="LEGAJO")
     private Empleado idEmpleado;
 

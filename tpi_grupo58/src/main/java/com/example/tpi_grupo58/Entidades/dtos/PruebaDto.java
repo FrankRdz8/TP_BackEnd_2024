@@ -33,4 +33,6 @@ public class PruebaDto {
         return new Prueba(id, idVehiculo.toVehiculo(), idInteresado.toInteresado(),
                 idEmpleado.toEmpleado(), fechaHoraInicio, fechaHoraFin, comentarios);
     }
+
+
 }
