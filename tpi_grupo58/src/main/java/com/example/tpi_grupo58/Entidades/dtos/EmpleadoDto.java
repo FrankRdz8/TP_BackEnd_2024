@@ -1,6 +1,7 @@
 package com.example.tpi_grupo58.Entidades.dtos;
 
 import com.example.tpi_grupo58.Entidades.Empleado;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +9,7 @@ import java.math.BigInteger;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class EmpleadoDto {
 
     private Integer legajo;

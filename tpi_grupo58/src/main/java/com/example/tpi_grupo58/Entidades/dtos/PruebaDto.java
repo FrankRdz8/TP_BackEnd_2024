@@ -2,12 +2,14 @@ package com.example.tpi_grupo58.Entidades.dtos;
 
 import com.example.tpi_grupo58.Entidades.Modelo;
 import com.example.tpi_grupo58.Entidades.Prueba;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class PruebaDto {
     private Integer id;
     private VehiculoDto idVehiculo;

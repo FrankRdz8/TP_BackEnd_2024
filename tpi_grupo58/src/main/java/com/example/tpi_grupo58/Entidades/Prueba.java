@@ -33,7 +33,7 @@ public class Prueba {
     @Column(name = "FECHA_HORA_INICIO", nullable = false)
     private LocalDateTime fechaHoraInicio;
 
-    @Column(name = "FECHA_HORA_FIN", nullable = false)
+    @Column(name = "FECHA_HORA_FIN")
     private LocalDateTime fechaHoraFin;
 
     @Column(name = "COMENTARIOS")
