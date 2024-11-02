@@ -13,9 +13,11 @@ import java.util.Optional;
 public interface PruebaRepository extends JpaRepository<Prueba, Integer> {
 
     @Query(value = "SELECT * FROM Pruebas p WHERE p.ID_VEHICULO = :idVehiculo", nativeQuery = true)
-    List<PruebaDto> findByVehiculo(Integer idVehiculo);
+    List<Prueba> findByVehiculo(Integer idVehiculo);
     @Query(value = "SELECT * FROM Pruebas p WHERE p.ID_EMPLEADO = :idEmpleado", nativeQuery = true)
-    List<PruebaDto> findByEmpleado(Integer idEmpleado);
+    List<Prueba> findByEmpleado(Integer idEmpleado);
     @Query(value = "SELECT * FROM Pruebas p WHERE p.ID_INTERESADO = :idInteresado", nativeQuery = true)
-    List<PruebaDto> findByCliente(Integer idInteresado);
+    List<Prueba> findByCliente(Integer idInteresado);
+    @Query(value = "SELECT * FROM Pruebas p WHERE p.FECHA_HORA_FIN IS NULL", nativeQuery = true)
+    List<Prueba> findByPruebaEnCurso();
 }

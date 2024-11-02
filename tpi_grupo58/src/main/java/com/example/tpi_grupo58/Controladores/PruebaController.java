@@ -5,10 +5,11 @@ import com.example.tpi_grupo58.Servicios.PruebaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/pruebas")
@@ -21,16 +22,24 @@ public class PruebaController {
     }
 
     @PostMapping
-    public ResponseEntity<PruebaDto> addPrueba(@Valid @RequestBody PruebaDto prueba){
-        /*try {
-            this.pruebaService.add(prueba);
-            return new ResponseEntity<>(prueba, HttpStatus.CREATED);
-        } catch (Exception ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
-        }*/
+    public ResponseEntity<Object> addPrueba(@Valid @RequestBody PruebaDto prueba){
 
+        Map<String, Object> mapa = pruebaService.add(prueba);
+        if (mapa.get("prueba") == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(mapa.get("mensaje"));
+        }
 
-        return new ResponseEntity<>(pruebaService.add(prueba), HttpStatus.CREATED);
+        return new ResponseEntity<>(mapa.get("prueba"), HttpStatus.CREATED);
+    }
+
+    @GetMapping
+    public ResponseEntity<Object> getPruebasFechaActual(){
+        List<PruebaDto> pruebas = pruebaService.getPruebasFechaActual();
+
+        return pruebas.isEmpty()
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.ok(pruebas);
     }
 
 
