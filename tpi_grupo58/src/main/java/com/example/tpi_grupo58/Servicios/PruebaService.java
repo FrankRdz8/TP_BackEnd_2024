@@ -93,6 +93,9 @@ public class PruebaService {
         pruebaDto.setFechaHoraFin(null);
         pruebaDto.setComentarios(null);
 
+        mapa.put("prueba", pruebaDto);
+        pruebaRepository.save(pruebaDto.toPrueba());
+
         return mapa;
     }
 
