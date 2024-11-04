@@ -5,6 +5,7 @@ import com.example.tpi_grupo58.Entidades.dtos.EmpleadoDto;
 import com.example.tpi_grupo58.Entidades.dtos.InteresadoDto;
 import com.example.tpi_grupo58.Entidades.dtos.PruebaDto;
 import com.example.tpi_grupo58.Entidades.dtos.VehiculoDto;
+import com.example.tpi_grupo58.Entidades.exception.ResourceNotFoundException;
 import com.example.tpi_grupo58.Repositorios.PruebaRepository;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,12 @@ public class PruebaService {
 
         // Aca guardamos el objeto pruebaDto y el mensaje de la petición (200 o 400)
         Map<String, Object> mapa = new HashMap<>();
+
+        if (interesado.isEmpty() || empleado.isEmpty() || vehiculo.isEmpty()) {
+            mapa.put("prueba", null);
+            mapa.put("mensaje", "Uno de los IDs proporcionados no corresponde a un registro existente.");
+            return mapa;
+        }
 
         // Buscar interesado sin licencia vencida y no restringido
         if (interesado.get().getFechaVencimientoLicencia().isBefore(LocalDateTime.now()) || interesado.get().getRestringido() == 1){
@@ -90,12 +97,24 @@ public class PruebaService {
     }
 
     // Requerimiento 2
-    public List<PruebaDto> getPruebasFechaActual() {
+    // 2024-11-02T13:37:31.882 -> Formato de fecha
+    public List<PruebaDto> getPruebasFechaDada(LocalDateTime fecha) {
         List<Prueba> pruebasActuales = pruebaRepository.findByPruebaEnCurso();
 
         return pruebasActuales.stream()
+                .filter(prueba -> prueba.getFechaHoraInicio().isBefore(fecha))
                 .map(PruebaDto::new)
                 .toList();
+    }
+
+    // Requerimiento 3
+    public PruebaDto finalizarPrueba(Integer id, PruebaDto pruebaDto){
+        Prueba prueba = pruebaRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundException(String.format("Prueba [%d] inexistente", id))
+        );
+        prueba.setFechaHoraFin(LocalDateTime.now());
+        prueba.setComentarios(pruebaDto.getComentarios());
+        return new PruebaDto(pruebaRepository.saveAndFlush(prueba.finalizarPrueba(pruebaDto.toPrueba())));
     }
 
     public List<Prueba> getByVehiculo(Integer idVehiculo){

@@ -40,6 +40,10 @@ public class Prueba {
     private String comentarios;
 
 
-
+    public Prueba finalizarPrueba(Prueba prueba) {
+        fechaHoraFin = prueba.getFechaHoraFin();
+        comentarios = prueba.getComentarios();
+        return this;
+    }
 
 }

@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,12 +35,20 @@ public class PruebaController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getPruebasFechaActual(){
-        List<PruebaDto> pruebas = pruebaService.getPruebasFechaActual();
+    public ResponseEntity<Object> getPruebasFechaActual(@RequestParam LocalDateTime fecha){
+        List<PruebaDto> pruebas = pruebaService.getPruebasFechaDada(fecha);
 
         return pruebas.isEmpty()
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(pruebas);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<PruebaDto> finalizarPrueba(
+            @PathVariable Integer id,
+            @RequestBody PruebaDto pruebaDto
+    ){
+        return new ResponseEntity<>(pruebaService.finalizarPrueba(id, pruebaDto), HttpStatus.ACCEPTED);
     }
 
 
