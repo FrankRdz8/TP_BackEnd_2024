@@ -7,6 +7,7 @@ import com.example.tpi_grupo58.Entidades.Vehiculo;
 import com.example.tpi_grupo58.Entidades.dtos.VehiculoDto;
 import com.example.tpi_grupo58.Servicios.PruebaService;
 import com.example.tpi_grupo58.Servicios.VehiculoService;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
@@ -75,6 +76,20 @@ public class VehiculoController {
 
 
         // Enviamos el mail (microservicio externo)
+        try {
+            RestTemplate rest = new RestTemplate();
+            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(json);
+
+            ResponseEntity<Map> res = rest.postForEntity(
+                    "http://localhost:8081/api/convert", entity, Map.class
+            );
+
+            if (res.getStatusCode().is2xxSuccessful()){
+                alquiler.setMonto((double)res.getBody().get("importe"));
+            }
+        } catch (HttpClientErrorException ex){
+
+        }
 
 
 
