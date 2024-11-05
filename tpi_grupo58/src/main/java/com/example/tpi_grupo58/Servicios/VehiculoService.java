@@ -9,6 +9,7 @@ import com.example.tpi_grupo58.Entidades.dtos.InteresadoDto;
 import com.example.tpi_grupo58.Entidades.dtos.VehiculoDto;
 import com.example.tpi_grupo58.Repositorios.ModeloRepository;
 import com.example.tpi_grupo58.Repositorios.VehiculoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,8 @@ import java.util.Optional;
 public class VehiculoService {
     private VehiculoRepository vehiculoRepository;
     private Agencia agencia;
-    private JavaMailSender mailSender;
+
+    final private JavaMailSender mailSender;
 
     public VehiculoService(VehiculoRepository vehiculoRepository, JavaMailSender mailSender){
         this.vehiculoRepository = vehiculoRepository;

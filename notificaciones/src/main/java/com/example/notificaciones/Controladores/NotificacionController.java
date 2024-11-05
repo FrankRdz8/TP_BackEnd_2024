@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/notifiaciones")
+@RequestMapping("/api/notificaciones")
 public class NotificacionController {
 
     private NotificacionService notificacionService;

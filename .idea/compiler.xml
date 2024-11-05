@@ -15,8 +15,8 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="gateway" options="-parameters" />
-      <module name="notificaciones" options="-parameters" />
+      <module name="gateway" options="" />
+      <module name="notificaciones" options="" />
       <module name="tpi_grupo58" options="-parameters" />
     </option>
   </component>

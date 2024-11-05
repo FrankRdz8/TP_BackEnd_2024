@@ -23,8 +23,8 @@ public class VehiculoController {
     private VehiculoService vehiculoService;
     private PruebaService pruebaService;
 
-    @Value("${notification.service.url}") // URL del microservicio de notificaciones
-    private String notificationServiceUrl;
+    //@Value("${notification.service.url}") // URL del microservicio de notificaciones
+    //private String notificationServiceUrl;
 
     public VehiculoController(VehiculoService vehiculoService,
                               PruebaService pruebaService){
@@ -114,7 +114,7 @@ public class VehiculoController {
         try {
             RestTemplate rest = new RestTemplate();
             ResponseEntity<Void> response = rest.postForEntity(
-                    notificationServiceUrl + "/api/notificaciones/enviar",
+                    "http://localhost:8081/api/notificaciones/enviar",
                     request,
                     Void.class
             );
