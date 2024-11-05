@@ -9,6 +9,8 @@ import com.example.tpi_grupo58.Entidades.dtos.InteresadoDto;
 import com.example.tpi_grupo58.Entidades.dtos.VehiculoDto;
 import com.example.tpi_grupo58.Repositorios.ModeloRepository;
 import com.example.tpi_grupo58.Repositorios.VehiculoRepository;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -16,19 +18,24 @@ import java.util.Optional;
 @Service
 public class VehiculoService {
     private VehiculoRepository vehiculoRepository;
-
     private Agencia agencia;
+    private JavaMailSender mailSender;
 
-    public VehiculoService(VehiculoRepository vehiculoRepository){
+    public VehiculoService(VehiculoRepository vehiculoRepository, JavaMailSender mailSender){
         this.vehiculoRepository = vehiculoRepository;
+        this.mailSender = mailSender;
     }
 
     public Optional<VehiculoDto> getById(Integer id) {
-        Optional<Vehiculo> vehiculo = vehiculoRepository.findById(id);
-
-        return vehiculo.isEmpty()
-                ? Optional.empty()
-                : Optional.of(new VehiculoDto(vehiculo.get()));
+        try {
+            Optional<Vehiculo> vehiculo = vehiculoRepository.findById(id);
+            return vehiculo.isEmpty()
+                    ? Optional.empty()
+                    : Optional.of(new VehiculoDto(vehiculo.get()));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Optional.empty();
+        }
     }
 
 
@@ -93,5 +100,18 @@ public class VehiculoService {
 
     public void setAgencia(Agencia agencia) {
         this.agencia = agencia;
+    }
+
+    // Método para enviar notificación por email
+    public void sendEmailNotification(String to, String subject, String text) {
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(to);
+            message.setSubject(subject);
+            message.setText(text);
+            mailSender.send(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
