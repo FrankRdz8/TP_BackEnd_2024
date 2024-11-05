@@ -24,15 +24,19 @@ public class PruebaService {
     private InteresadoService interesadoService;
     private VehiculoService vehiculoService;
     private EmpleadoService empleadoService;
+    private PosicionService posicionService;
+
 
     public PruebaService(PruebaRepository pruebaRepository,
                          InteresadoService interesadoService,
                          VehiculoService vehiculoService,
-                         EmpleadoService empleadoService){
+                         EmpleadoService empleadoService,
+                         PosicionService posicionService){
         this.pruebaRepository = pruebaRepository;
         this.interesadoService = interesadoService;
         this.vehiculoService = vehiculoService;
         this.empleadoService = empleadoService;
+        this.posicionService = posicionService;
     }
 
     // Requerimiento 1
@@ -119,6 +123,7 @@ public class PruebaService {
         prueba.setComentarios(pruebaDto.getComentarios());
         return new PruebaDto(pruebaRepository.saveAndFlush(prueba.finalizarPrueba(pruebaDto.toPrueba())));
     }
+
 
     public List<Prueba> getByVehiculo(Integer idVehiculo){
         return pruebaRepository.findByVehiculo(idVehiculo);

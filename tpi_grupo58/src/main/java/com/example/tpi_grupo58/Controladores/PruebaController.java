@@ -1,6 +1,8 @@
 package com.example.tpi_grupo58.Controladores;
 
+import com.example.tpi_grupo58.Entidades.Prueba;
 import com.example.tpi_grupo58.Entidades.dtos.PruebaDto;
+import com.example.tpi_grupo58.Entidades.dtos.VehiculoDto;
 import com.example.tpi_grupo58.Servicios.PruebaService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -11,6 +13,7 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/pruebas")
@@ -50,9 +53,6 @@ public class PruebaController {
     ){
         return new ResponseEntity<>(pruebaService.finalizarPrueba(id, pruebaDto), HttpStatus.ACCEPTED);
     }
-
-
-
 
 
 }
