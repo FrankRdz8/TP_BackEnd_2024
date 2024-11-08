@@ -16,6 +16,7 @@ public class Telefono {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="ID")
     private Integer id;
 
     @Column(name = "NUMERO", nullable = false)
@@ -24,7 +25,7 @@ public class Telefono {
     /*@ManyToMany(mappedBy = "telefonosList")
     private List<NotificacionPromo> promoList;*/
 
-    @OneToMany(mappedBy = "idTelefono", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "telefono", cascade = CascadeType.ALL)
     private List<PromoTelefono> promosTelefonos;
 
 

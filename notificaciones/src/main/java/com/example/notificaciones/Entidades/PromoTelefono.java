@@ -3,6 +3,7 @@ package com.example.notificaciones.Entidades;
 
 import com.example.notificaciones.Entidades.compositekey.PromoTelefonoId;
 import jakarta.persistence.*;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
@@ -10,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "PromocionesTelefonos")
 @NoArgsConstructor
+@Data
 public class PromoTelefono {
 
     @EmbeddedId
@@ -23,23 +25,21 @@ public class PromoTelefono {
     @ManyToOne(fetch = FetchType.LAZY)
     @MapsId("idTelefono")  // Mapea el atributo de la clave primaria compuesta
     @JoinColumn(name = "ID_TELEFONO", referencedColumnName = "ID")
-    private Telefono idTelefono;
+    private Telefono telefono;
 
     //@MapsId("fechaHoraPromo") // Asocia el campo fechaHoraPromocion en la clave compuesta
-    @Column(name = "FECHA_HORA_PROMO")
+    @Column(name = "FECHA_HORA_PROMO", insertable = false, updatable = false)
     private LocalDateTime fechaHoraPromocion;
 
     public PromoTelefono(NotificacionPromo notificacionPromo,
                          Telefono idTelefono,
                          LocalDateTime fechaHoraPromocion){
         this.idPromocion = notificacionPromo;
-        this.idTelefono = idTelefono;
+        this.telefono = idTelefono;
         this.fechaHoraPromocion = fechaHoraPromocion;
         this.idPromoTelefono = new PromoTelefonoId(
                 idPromocion.getIdNotificacionPromocion(),
-                this.idTelefono.getId(),
+                telefono.getId(),
                 this.fechaHoraPromocion);
     }
-
-
 }

@@ -18,6 +18,7 @@ public class NotificacionAviso {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="ID")
     private Integer idNotificacionAviso;
 
     @Column(name = "ID_PRUEBA", nullable = false)
