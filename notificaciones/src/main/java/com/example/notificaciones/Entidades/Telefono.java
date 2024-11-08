@@ -21,10 +21,15 @@ public class Telefono {
     @Column(name = "NUMERO", nullable = false)
     private Integer numero;
 
-    @ManyToMany(mappedBy = "telefonosList")
-    private List<NotificacionPromo> promoList;
+    /*@ManyToMany(mappedBy = "telefonosList")
+    private List<NotificacionPromo> promoList;*/
 
-    @ManyToMany(mappedBy = "telefonosList")
-    private List<NotificacionAviso> avisosList;
+    @OneToMany(mappedBy = "idTelefono", cascade = CascadeType.ALL)
+    private List<PromoTelefono> promosTelefonos;
+
+
+    public Telefono(Integer numero){
+        this.numero = numero;
+    }
 
 }

@@ -7,16 +7,16 @@ import com.example.tpi_grupo58.Entidades.Vehiculo;
 import com.example.tpi_grupo58.Entidades.dtos.VehiculoDto;
 import com.example.tpi_grupo58.Servicios.PruebaService;
 import com.example.tpi_grupo58.Servicios.VehiculoService;
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/vehiculo")
@@ -32,20 +32,24 @@ public class VehiculoController {
         this.pruebaService = pruebaService;
     }
 
-    @PostMapping("/mail")
-    public ResponseEntity<String> findVehiculos(@RequestParam Integer idVehiculo,
+    @PostMapping("/mensaje")
+    public ResponseEntity<String> enviarMensajeVehiculoAlerta(@RequestParam Integer idVehiculo,
                                                 @RequestBody Coordenada coordenada){
 
-        Vehiculo vehiculo = vehiculoService.getById(idVehiculo).get().toVehiculo();
+        Optional<VehiculoDto> vehiculo = vehiculoService.getById(idVehiculo);
         // Verificar si el vehiculo esta en una prueba si existe
-        if (Objects.equals(vehiculo.getId(), idVehiculo)){
-            // Buscar la prueba activa con el vehiculo ingresa
-            Prueba pruebaVehiculo = pruebaService.getByVehiculo(idVehiculo).stream()
-                    .filter(prueba -> prueba.getFechaHoraFin() == null)
-                    .findFirst().get();
+        if (vehiculo.isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("No existe el vehiculo ingresado. Ingrese un vehiculo válido.");
+        }
 
-        } else {
-            // Retornar un error diciendo que no existe el vehiculo
+        // Buscar la prueba activa con el vehiculo ingresa
+        Optional<Prueba> pruebaVehiculo = pruebaService.getByVehiculo(idVehiculo).stream()
+                .filter(prueba -> prueba.getFechaHoraFin() == null)
+                .findFirst();
+        if (pruebaVehiculo.isEmpty()){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("El vehiculo ingresado no está realizando una prueba en este momento. ");
         }
 
 
@@ -69,27 +73,36 @@ public class VehiculoController {
         if (vehiculoService.isVehicleInAllowedArea(coordenada)) {
             return ResponseEntity.ok("El vehículo está en un área permitida.");
         } else {
-            // Disparar las acciones necesarias aquí
+            // Enviamos el mensaje (microservicio externo)
+            Map<String, String> mapa = new HashMap<>();
+            mapa.put("idprueba", pruebaVehiculo.get().getIdVehiculo().getId().toString());
+            mapa.put("fechahoraaviso", LocalDateTime.now().toString());
+            mapa.put("mensaje", vehiculoService.getRazonAviso());
+
+            try {
+                RestTemplate rest = new RestTemplate();
+                HttpEntity<Map<String, String>> entity = new HttpEntity<>(mapa);
+
+                rest.postForEntity(
+                        "http://localhost:8081/api/notificaciones/aviso", entity, Map.class
+                );
+
+                /*if (res.getStatusCode().is2xxSuccessful()){
+
+                }*/
+
+            } catch (HttpClientErrorException ex){
+                ex.printStackTrace();
+            }
+
             return ResponseEntity.status(403).body("El vehículo está en una zona restringida o ha excedido el radio permitido.");
         }
 
 
 
-        // Enviamos el mail (microservicio externo)
-        try {
-            RestTemplate rest = new RestTemplate();
-            HttpEntity<Map<String, Object>> entity = new HttpEntity<>(json);
 
-            ResponseEntity<Map> res = rest.postForEntity(
-                    "http://localhost:8081/api/convert", entity, Map.class
-            );
 
-            if (res.getStatusCode().is2xxSuccessful()){
-                alquiler.setMonto((double)res.getBody().get("importe"));
-            }
-        } catch (HttpClientErrorException ex){
 
-        }
 
 
 

@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "Notificaciones_Avisos")
+@Table(name = "NotificacionesAvisos")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -20,19 +20,8 @@ public class NotificacionAviso {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idNotificacionAviso;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "Avisos_Telefonos",
-            joinColumns = @JoinColumn(name = "ID"),
-            inverseJoinColumns = @JoinColumn(name = "ID")
-    )
-    private List<Telefono> telefonosList;
-
-    @Column(name = "ID_VEHICULO", nullable = false)
-    private Integer idVehiculo;
-
-    @Column(name = "NOMBRE_CLIENTE", nullable = false)
-    private String nombreCliente;
+    @Column(name = "ID_PRUEBA", nullable = false)
+    private Integer idPrueba;
 
     @Column(name = "FECHA_HORA_AVISO", nullable = false)
     private LocalDateTime fechaHoraAviso;
@@ -40,9 +29,11 @@ public class NotificacionAviso {
     @Column(name = "MENSAJE", nullable = false)
     private String mensaje;
 
-    @Column(name = "MOTIVO", nullable = false)
-    private String motivo;
-
-
+    public NotificacionAviso(NotificacionAviso notificacionAviso){
+        this.idNotificacionAviso = null;
+        this.idPrueba = notificacionAviso.getIdPrueba();
+        this.fechaHoraAviso = notificacionAviso.getFechaHoraAviso();
+        this.mensaje = notificacionAviso.getMensaje();
+    }
 
 }

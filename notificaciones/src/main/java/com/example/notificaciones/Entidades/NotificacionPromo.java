@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "Notificaciones_Promociones")
+@Table(name = "NotificacionesPromociones")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,19 +19,23 @@ public class NotificacionPromo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idNotificacionPromocion;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    /*@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
-            name = "Promociones_Telefonos",
-            joinColumns = @JoinColumn(name = "ID"),
-            inverseJoinColumns = @JoinColumn(name = "ID")
+            name = "PromocionesTelefonos",
+            joinColumns = @JoinColumn(name = "ID_PROMOCION", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "ID_TELEFONO", referencedColumnName = "ID")
     )
-    private List<Telefono> telefonosList;
+    private List<Telefono> telefonosList;*/
 
+    @Column(name = "FECHA_HORA_PROMO", nullable = false)
+    private LocalDateTime fechaHoraPromo;
     @Column(name = "FECHA_HORA_VENCIMIENTO", nullable = false)
     private LocalDateTime fechaHoraVencimiento;
     @Column(name = "MENSAJE", nullable = false)
     private String mensaje;
 
+    @OneToMany(mappedBy = "idPromocion", cascade = CascadeType.ALL)
+    private List<PromoTelefono> promoTelefonos;
 
 
 }

@@ -18,6 +18,7 @@ public class VehiculoService {
     private VehiculoRepository vehiculoRepository;
 
     private Agencia agencia;
+    private String razon;
 
     public VehiculoService(VehiculoRepository vehiculoRepository){
         this.vehiculoRepository = vehiculoRepository;
@@ -38,12 +39,22 @@ public class VehiculoService {
 
     private boolean isWithinRadius(Coordenada posicionVehiculo) {
         double distancia = calcularDistancia(agencia.getCoordenadasAgencia(), posicionVehiculo);
+        setRazonAviso("¡Atención!\n" +
+                "El vehículo ha superado el radio de 5 km de la agencia.\n" +
+                "Por razones de seguridad y para evitar inconvenientes, le solicitamos que regrese a la agencia lo antes posible.\n" +
+                "\n" +
+                "Por favor, tome acción inmediata para evitar cualquier inconveniente.");
         return distancia <= agencia.getRadioAdmitidoKm();
     }
 
     private boolean isInRestrictedZone(Coordenada posicionVehiculo) {
         for (ZonaRestringida zona : agencia.getZonasRestringidas()) {
             if (isWithinBounds(posicionVehiculo, zona)) {
+                setRazonAviso("¡Atención!\n" +
+                        "El vehículo se encuentra actualmente en una zona restringida.\n" +
+                        "Por motivos de seguridad y regulación, le solicitamos que regrese lo antes posible a la agencia para evitar sanciones o problemas adicionales.\n" +
+                        "\n" +
+                        "Por favor, tome acción inmediata.");
                 return true; // Está dentro de una zona restringida
             }
         }
@@ -93,5 +104,13 @@ public class VehiculoService {
 
     public void setAgencia(Agencia agencia) {
         this.agencia = agencia;
+    }
+
+    private void setRazonAviso(String razon){
+        this.razon = razon;
+    }
+
+    public String getRazonAviso(){
+        return razon;
     }
 }
