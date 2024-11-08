@@ -33,4 +33,8 @@ public class Telefono {
         this.numero = numero;
     }
 
+    public Telefono(Telefono telefono){
+        this.numero = telefono.getNumero();
+    }
+
 }

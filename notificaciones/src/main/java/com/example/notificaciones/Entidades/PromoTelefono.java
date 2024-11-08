@@ -27,7 +27,6 @@ public class PromoTelefono {
     @JoinColumn(name = "ID_TELEFONO", referencedColumnName = "ID")
     private Telefono telefono;
 
-    //@MapsId("fechaHoraPromo") // Asocia el campo fechaHoraPromocion en la clave compuesta
     @Column(name = "FECHA_HORA_PROMO", insertable = false, updatable = false)
     private LocalDateTime fechaHoraPromocion;
 

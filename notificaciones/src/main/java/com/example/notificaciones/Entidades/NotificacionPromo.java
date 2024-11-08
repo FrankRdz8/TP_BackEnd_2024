@@ -20,14 +20,6 @@ public class NotificacionPromo {
     @Column(name="ID")
     private Integer idNotificacionPromocion;
 
-    /*@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "PromocionesTelefonos",
-            joinColumns = @JoinColumn(name = "ID_PROMOCION", referencedColumnName = "ID"),
-            inverseJoinColumns = @JoinColumn(name = "ID_TELEFONO", referencedColumnName = "ID")
-    )
-    private List<Telefono> telefonosList;*/
-
     @Column(name = "FECHA_HORA_PROMO", nullable = false)
     private LocalDateTime fechaHoraPromo;
     @Column(name = "FECHA_HORA_VENCIMIENTO", nullable = false)
@@ -37,4 +29,11 @@ public class NotificacionPromo {
 
     @OneToMany(mappedBy = "idPromocion", cascade = CascadeType.ALL)
     private List<PromoTelefono> promoTelefonos;
+
+    public NotificacionPromo(NotificacionPromo notificacionPromo){
+        this.fechaHoraPromo = notificacionPromo.getFechaHoraPromo();
+        this.fechaHoraVencimiento = notificacionPromo.getFechaHoraVencimiento();
+        this.mensaje = notificacionPromo.getMensaje();
+    }
+
 }

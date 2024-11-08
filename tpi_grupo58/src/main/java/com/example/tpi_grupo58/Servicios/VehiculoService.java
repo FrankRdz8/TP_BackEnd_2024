@@ -27,9 +27,7 @@ public class VehiculoService {
     public Optional<VehiculoDto> getById(Integer id) {
         Optional<Vehiculo> vehiculo = vehiculoRepository.findById(id);
 
-        return vehiculo.isEmpty()
-                ? Optional.empty()
-                : Optional.of(new VehiculoDto(vehiculo.get()));
+        return vehiculo.map(VehiculoDto::new);
     }
 
 
