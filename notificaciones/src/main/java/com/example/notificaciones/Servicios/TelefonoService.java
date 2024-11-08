@@ -17,9 +17,7 @@ public class TelefonoService {
 
 
     public Optional<Telefono> getByNumero(Integer numeroTelefono){
-        Optional<Telefono> telefono = telefonoRepository.findByNumero(numeroTelefono);
-
-        return telefono.map(Telefono::new);
+        return telefonoRepository.findByNumero(numeroTelefono);
     }
 
     public Telefono addNumero(Telefono telefono){

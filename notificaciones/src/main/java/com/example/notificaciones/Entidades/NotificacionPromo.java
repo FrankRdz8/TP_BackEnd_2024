@@ -31,9 +31,20 @@ public class NotificacionPromo {
     private List<PromoTelefono> promoTelefonos;
 
     public NotificacionPromo(NotificacionPromo notificacionPromo){
+        this.idNotificacionPromocion = notificacionPromo.getIdNotificacionPromocion();
         this.fechaHoraPromo = notificacionPromo.getFechaHoraPromo();
         this.fechaHoraVencimiento = notificacionPromo.getFechaHoraVencimiento();
         this.mensaje = notificacionPromo.getMensaje();
+    }
+
+    public NotificacionPromo(Integer id,
+                             LocalDateTime fechaHoraPromo,
+                             LocalDateTime fechaHoraVencimiento,
+                             String mensaje){
+        this.idNotificacionPromocion = id;
+        this.fechaHoraPromo = fechaHoraPromo;
+        this.fechaHoraVencimiento = fechaHoraVencimiento;
+        this.mensaje = mensaje;
     }
 
 }

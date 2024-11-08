@@ -41,4 +41,14 @@ public class PromoTelefono {
                 telefono.getId(),
                 this.fechaHoraPromocion);
     }
+
+    public PromoTelefono(PromoTelefonoId promoTelefonoId,
+                         Integer idPromo,
+                         Integer telefono,
+                         LocalDateTime fechaHoraPromocion){
+        this.idPromoTelefono = promoTelefonoId;
+        this.idPromocion = new NotificacionPromo(idPromo);
+        this.telefono = telefono;
+        this.fechaHoraPromocion = fechaHoraPromocion;
+    }
 }

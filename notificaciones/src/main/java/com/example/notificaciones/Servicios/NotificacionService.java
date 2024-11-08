@@ -3,6 +3,7 @@ package com.example.notificaciones.Servicios;
 import com.example.notificaciones.Entidades.NotificacionAviso;
 import com.example.notificaciones.Entidades.NotificacionPromo;
 import com.example.notificaciones.Entidades.PromoTelefono;
+import com.example.notificaciones.Entidades.dto.NotificacionPromoDto;
 import com.example.notificaciones.Repositorios.NotificacionAvisoRepository;
 import com.example.notificaciones.Repositorios.NotificacionPromoRepository;
 import com.example.notificaciones.Repositorios.PromoTelefonoRepository;
@@ -34,7 +35,8 @@ public class NotificacionService {
     public Optional<NotificacionPromo> getById(Integer idPromo){
         Optional<NotificacionPromo> promo = notificacionPromoRepository.findById(idPromo);
 
-        return promo.map(NotificacionPromo::new);
+        return promo;
+
     }
 
     public List<PromoTelefono> addPromosTelefonos(List<PromoTelefono> promosTelefonos){

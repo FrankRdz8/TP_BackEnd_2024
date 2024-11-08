@@ -5,6 +5,7 @@ import com.example.notificaciones.Entidades.NotificacionAviso;
 import com.example.notificaciones.Entidades.NotificacionPromo;
 import com.example.notificaciones.Entidades.PromoTelefono;
 import com.example.notificaciones.Entidades.Telefono;
+import com.example.notificaciones.Entidades.dto.NotificacionPromoDto;
 import com.example.notificaciones.Entidades.dto.TelefonoDto;
 import com.example.notificaciones.Servicios.NotificacionService;
 import com.example.notificaciones.Servicios.TelefonoService;
@@ -55,6 +56,7 @@ public class NotificacionController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(new ArrayList<PromoTelefono>());
         }
+        NotificacionPromoDto promoDto = new NotificacionPromoDto(promo.get());
 
         // Buscar telefonos
         List<Telefono> listaIntegral = new ArrayList<>();
