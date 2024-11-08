@@ -17,6 +17,7 @@ public class NotificacionPromo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="ID")
     private Integer idNotificacionPromocion;
 
     /*@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -36,6 +37,4 @@ public class NotificacionPromo {
 
     @OneToMany(mappedBy = "idPromocion", cascade = CascadeType.ALL)
     private List<PromoTelefono> promoTelefonos;
-
-
 }
