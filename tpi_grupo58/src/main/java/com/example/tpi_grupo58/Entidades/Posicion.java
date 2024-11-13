@@ -1,5 +1,6 @@
 package com.example.tpi_grupo58.Entidades;
 
+import com.example.tpi_grupo58.Entidades.dtos.VehiculoDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -31,4 +32,14 @@ public class Posicion {
 
     @Column(name = "LONGITUD", nullable = false)
     private double longitud;
+
+
+    public Posicion(VehiculoDto vehiculo, LocalDateTime fechaHora,
+                            Double latitud, Double longitud)
+    {
+        this.idVehiculo = vehiculo.toVehiculo();
+        this.fechaHora = fechaHora;
+        this.latitud = latitud;
+        this.longitud = longitud;
+    }
 }

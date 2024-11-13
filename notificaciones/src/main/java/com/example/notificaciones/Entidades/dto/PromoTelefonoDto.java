@@ -18,14 +18,14 @@ import java.time.LocalDateTime;
 public class PromoTelefonoDto {
 
     private PromoTelefonoId idPromoTelefono;
-    private Integer idPromocion;
-    private Integer telefono;
+    private NotificacionPromoDto idPromocion;
+    private TelefonoDto telefono;
     private LocalDateTime fechaHoraPromocion;
 
     public PromoTelefonoDto(PromoTelefono promoTelefono){
         idPromoTelefono = promoTelefono.getIdPromoTelefono();
-        idPromocion = promoTelefono.getIdPromocion().getIdNotificacionPromocion();
-        telefono = promoTelefono.getTelefono().getId();
+        idPromocion = new NotificacionPromoDto(promoTelefono.getIdPromocion());
+        telefono = new TelefonoDto(promoTelefono.getTelefono());
         fechaHoraPromocion = promoTelefono.getFechaHoraPromocion();
     }
 

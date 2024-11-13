@@ -11,13 +11,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TelefonoDto {
 
+    private Integer id;
     private Integer numero;
 
     public TelefonoDto(Telefono telefono){
+        id = telefono.getId();
         numero = telefono.getNumero();
     }
 
     public Telefono toTelefono(){
-        return new Telefono(numero);
+        return new Telefono(id, numero);
     }
 }

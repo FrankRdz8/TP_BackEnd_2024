@@ -63,7 +63,7 @@ public class PruebaService {
         }
 
         // Verificar que el vehiculo que le pasamos no esté en una prueba
-        List<Prueba> pruebasVehiculo = getByVehiculo(vehiculo.get().getId());
+        List<Prueba> pruebasVehiculo = getByVehiculo(vehiculo.get().getId()).stream().map(PruebaDto::toPrueba).toList();
         boolean pruebaVehiculoActivo = pruebasVehiculo.stream()
                 .anyMatch(prueba -> prueba.getFechaHoraFin() == null);
 
@@ -125,8 +125,8 @@ public class PruebaService {
     }
 
 
-    public List<Prueba> getByVehiculo(Integer idVehiculo){
-        return pruebaRepository.findByVehiculo(idVehiculo);
+    public List<PruebaDto> getByVehiculo(Integer idVehiculo){
+        return pruebaRepository.findByVehiculo(idVehiculo).stream().map(PruebaDto::new).toList();
     }
 
     public List<Prueba> getByEmpleado(Integer idEmpleado){

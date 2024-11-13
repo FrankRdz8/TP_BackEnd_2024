@@ -3,11 +3,11 @@ package com.example.tpi_grupo58.Controladores;
 import com.example.tpi_grupo58.Entidades.Coordenadas.Agencia;
 import com.example.tpi_grupo58.Entidades.Coordenadas.Coordenada;
 import com.example.tpi_grupo58.Entidades.Prueba;
-import com.example.tpi_grupo58.Entidades.Vehiculo;
+import com.example.tpi_grupo58.Entidades.dtos.PruebaDto;
 import com.example.tpi_grupo58.Entidades.dtos.VehiculoDto;
+import com.example.tpi_grupo58.Servicios.PosicionService;
 import com.example.tpi_grupo58.Servicios.PruebaService;
 import com.example.tpi_grupo58.Servicios.VehiculoService;
-import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,29 +16,35 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/vehiculo")
-public class VehiculoController {
+@RequestMapping("/api/posicion")
+public class PosicionController {
 
     private VehiculoService vehiculoService;
+    private PosicionService posicionService;
 
     private PruebaService pruebaService;
 
-    public VehiculoController(VehiculoService vehiculoService,
-                              PruebaService pruebaService){
+    public PosicionController(VehiculoService vehiculoService,
+                              PruebaService pruebaService,
+                              PosicionService posicionService) {
         this.vehiculoService = vehiculoService;
         this.pruebaService = pruebaService;
+        this.posicionService = posicionService;
     }
 
-    @PostMapping("/mensaje")
+    // Requerimiento 4
+    @PostMapping("/aviso")
     public ResponseEntity<String> enviarMensajeVehiculoAlerta(@RequestParam Integer idVehiculo,
-                                                @RequestBody Coordenada coordenada){
+                                                              @RequestBody Coordenada coordenada) {
 
         Optional<VehiculoDto> vehiculo = vehiculoService.getById(idVehiculo);
         // Verificar si el vehiculo esta en una prueba si existe
-        if (vehiculo.isEmpty()){
+        if (vehiculo.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("No existe el vehiculo ingresado. Ingrese un vehiculo válido.");
         }
@@ -46,8 +52,9 @@ public class VehiculoController {
         // Buscar la prueba activa con el vehiculo ingresa
         Optional<Prueba> pruebaVehiculo = pruebaService.getByVehiculo(idVehiculo).stream()
                 .filter(prueba -> prueba.getFechaHoraFin() == null)
-                .findFirst();
-        if (pruebaVehiculo.isEmpty()){
+                .findFirst()
+                .map(PruebaDto::toPrueba);
+        if (pruebaVehiculo.isEmpty()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("El vehiculo ingresado no está realizando una prueba en este momento. ");
         }
@@ -60,24 +67,29 @@ public class VehiculoController {
             ResponseEntity<Agencia> res = rest.getForEntity(
                     "https://labsys.frc.utn.edu.ar/apps-disponibilizadas/backend/api/v1/configuracion/", Agencia.class
             );
-            if (res.getStatusCode().is2xxSuccessful()){
-                vehiculoService.setAgencia(res.getBody());
+            if (res.getStatusCode().is2xxSuccessful()) {
+                posicionService.setAgencia(res.getBody());
             }
 
-        } catch (HttpClientErrorException ex){
+        } catch (HttpClientErrorException ex) {
             ex.printStackTrace();
         }
 
 
         // Verificamos si se encuentra en una zona prohibida
-        if (vehiculoService.isVehicleInAllowedArea(coordenada)) {
+        if (posicionService.isVehicleInAllowedArea(coordenada)) {
+            // Guardar posición
+            posicionService.addPosicion(vehiculo.get(), coordenada.getLat(), coordenada.getLon());
             return ResponseEntity.ok("El vehículo está en un área permitida.");
         } else {
+            // Guardar posición
+            posicionService.addPosicion(vehiculo.get(), coordenada.getLat(), coordenada.getLon());
+
             // Enviamos el mensaje (microservicio externo)
             Map<String, String> mapa = new HashMap<>();
-            mapa.put("idprueba", pruebaVehiculo.get().getIdVehiculo().getId().toString());
+            mapa.put("idprueba", pruebaVehiculo.get().getId().toString());
             mapa.put("fechahoraaviso", LocalDateTime.now().toString());
-            mapa.put("mensaje", vehiculoService.getRazonAviso());
+            mapa.put("mensaje", posicionService.getRazonAviso());
 
             try {
                 RestTemplate rest = new RestTemplate();
@@ -91,18 +103,12 @@ public class VehiculoController {
 
                 }*/
 
-            } catch (HttpClientErrorException ex){
+            } catch (HttpClientErrorException ex) {
                 ex.printStackTrace();
             }
 
             return ResponseEntity.status(403).body("El vehículo está en una zona restringida o ha excedido el radio permitido.");
         }
-
-
-
-
-
-
 
 
 

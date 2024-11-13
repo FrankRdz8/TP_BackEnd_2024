@@ -2,6 +2,8 @@ package com.example.notificaciones.Entidades;
 
 
 import com.example.notificaciones.Entidades.compositekey.PromoTelefonoId;
+import com.example.notificaciones.Entidades.dto.NotificacionPromoDto;
+import com.example.notificaciones.Entidades.dto.TelefonoDto;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -43,12 +45,13 @@ public class PromoTelefono {
     }
 
     public PromoTelefono(PromoTelefonoId promoTelefonoId,
-                         Integer idPromo,
-                         Integer telefono,
+                         NotificacionPromoDto idPromo,
+                         TelefonoDto telefono,
                          LocalDateTime fechaHoraPromocion){
         this.idPromoTelefono = promoTelefonoId;
-        this.idPromocion = new NotificacionPromo(idPromo);
-        this.telefono = telefono;
+        this.idPromocion = new NotificacionPromo(idPromo.getId(), idPromo.getFechaHoraPromo(),
+                idPromo.getFechaHoraVencimiento(), idPromo.getMensaje());
+        this.telefono = new Telefono(telefono.getId(), telefono.getNumero());
         this.fechaHoraPromocion = fechaHoraPromocion;
     }
 }

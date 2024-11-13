@@ -29,7 +29,8 @@ public class Telefono {
     private List<PromoTelefono> promosTelefonos;
 
 
-    public Telefono(Integer numero){
+    public Telefono(Integer id, Integer numero){
+        this.id = id;
         this.numero = numero;
     }
 

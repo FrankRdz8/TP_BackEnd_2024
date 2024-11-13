@@ -5,7 +5,9 @@ import com.example.notificaciones.Entidades.NotificacionAviso;
 import com.example.notificaciones.Entidades.NotificacionPromo;
 import com.example.notificaciones.Entidades.PromoTelefono;
 import com.example.notificaciones.Entidades.Telefono;
+import com.example.notificaciones.Entidades.dto.NotificacionAvisoDto;
 import com.example.notificaciones.Entidades.dto.NotificacionPromoDto;
+import com.example.notificaciones.Entidades.dto.PromoTelefonoDto;
 import com.example.notificaciones.Entidades.dto.TelefonoDto;
 import com.example.notificaciones.Servicios.NotificacionService;
 import com.example.notificaciones.Servicios.TelefonoService;
@@ -14,10 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/notificaciones")
@@ -31,6 +30,31 @@ public class NotificacionController {
         this.notificacionService = notificacionService;
         this.telefonoService = telefonoService;
     }
+
+    // Reporte de incidentes
+    @GetMapping("/avisos")
+    public ResponseEntity<List<NotificacionAvisoDto>> getIncidentes(){
+        List<NotificacionAvisoDto> avisos = notificacionService.getAll();
+
+        return avisos.isEmpty()
+                ? ResponseEntity.noContent().build()
+                : ResponseEntity.ok(avisos);
+    }
+
+    //  Reporte de incidentes por empleado
+    // Incidente -> Prueba -> Empleado
+
+    @PostMapping("/empleado")
+    public ResponseEntity<List<Map<String, Object>>> getIncidentesPorEmpleado(
+            @RequestBody List<Integer> idsPruebas
+    ){
+        List<Map<String, Object>> incidentes = new ArrayList<>();
+
+        incidentes = notificacionService.getIncidentesMapa(idsPruebas);
+
+        return ResponseEntity.ok(incidentes);
+    }
+
 
     @PostMapping("/aviso")
     public ResponseEntity<NotificacionAviso> guardarNotificacionAviso(
@@ -47,14 +71,14 @@ public class NotificacionController {
     }
 
     @PostMapping("/promo")
-    public ResponseEntity<List<PromoTelefono>> enviarPromo(@RequestParam Integer idPromo,
-                                              @RequestBody List<TelefonoDto> telefonos) {
+    public ResponseEntity<List<PromoTelefonoDto>> enviarPromo(@RequestParam Integer idPromo,
+                                                              @RequestBody List<TelefonoDto> telefonos) {
 
         // Buscar promo
         Optional<NotificacionPromo> promo = notificacionService.getById(idPromo);
         if (promo.isEmpty()){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(new ArrayList<PromoTelefono>());
+                    .body(new ArrayList<PromoTelefonoDto>());
         }
         NotificacionPromoDto promoDto = new NotificacionPromoDto(promo.get());
 
@@ -73,7 +97,7 @@ public class NotificacionController {
         }
 
         // Crear y subir PromoTelefono (Tabla intermedia)
-        List<PromoTelefono> listaPromosTelefonos = new ArrayList<>();
+        List<PromoTelefonoDto> listaPromosTelefonos = new ArrayList<>();
 
         LocalDateTime fechaHoraPromo = LocalDateTime.now();
 
@@ -82,7 +106,7 @@ public class NotificacionController {
                     promo.get(),
                     telefono,
                     fechaHoraPromo);
-            listaPromosTelefonos.add(promoTemporal);
+            listaPromosTelefonos.add(new PromoTelefonoDto(promoTemporal));
         }
 
         return new ResponseEntity<>(notificacionService.addPromosTelefonos(listaPromosTelefonos), HttpStatus.CREATED);
