@@ -4,13 +4,13 @@ import com.example.tpi_grupo58.Entidades.Coordenadas.Agencia;
 import com.example.tpi_grupo58.Entidades.Coordenadas.Coordenada;
 import com.example.tpi_grupo58.Entidades.Coordenadas.ZonaRestringida;
 import com.example.tpi_grupo58.Entidades.Posicion;
-import com.example.tpi_grupo58.Entidades.Vehiculo;
+import com.example.tpi_grupo58.Entidades.dtos.PosicionDto;
 import com.example.tpi_grupo58.Entidades.dtos.VehiculoDto;
-import com.example.tpi_grupo58.Repositorios.ModeloRepository;
 import com.example.tpi_grupo58.Repositorios.PosicionRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class PosicionService {
@@ -72,7 +72,7 @@ public class PosicionService {
     }
 
 
-    private double calcularDistancia(Coordenada coord1, Coordenada coord2) {
+    public double calcularDistancia(Coordenada coord1, Coordenada coord2) {
         // Implementar fórmula de Haversine o similar para calcular la distancia entre dos puntos
         // en la superficie de la tierra
         final double R = 6371.0;
@@ -97,6 +97,15 @@ public class PosicionService {
         double distancia = R * c;
 
         return distancia;
+    }
+
+
+    public List<PosicionDto> getPosicionByVehiculo(Integer idVehiculo){
+        return posicionRepository.findByVehiculo(idVehiculo).stream().map(PosicionDto::new).toList();
+    }
+
+    public Coordenada getCoordenadaAgencia(){
+        return agencia.getCoordenadasAgencia();
     }
 
     public void setAgencia(Agencia agencia) {

@@ -1,10 +1,9 @@
 package com.example.tpi_grupo58.Servicios;
 
+import com.example.tpi_grupo58.Entidades.Coordenadas.Agencia;
+import com.example.tpi_grupo58.Entidades.Coordenadas.Coordenada;
 import com.example.tpi_grupo58.Entidades.Prueba;
-import com.example.tpi_grupo58.Entidades.dtos.EmpleadoDto;
-import com.example.tpi_grupo58.Entidades.dtos.InteresadoDto;
-import com.example.tpi_grupo58.Entidades.dtos.PruebaDto;
-import com.example.tpi_grupo58.Entidades.dtos.VehiculoDto;
+import com.example.tpi_grupo58.Entidades.dtos.*;
 import com.example.tpi_grupo58.Entidades.exception.ResourceNotFoundException;
 import com.example.tpi_grupo58.Repositorios.PruebaRepository;
 import org.springframework.stereotype.Service;
@@ -124,6 +123,64 @@ public class PruebaService {
         return new PruebaDto(pruebaRepository.saveAndFlush(prueba.finalizarPrueba(pruebaDto.toPrueba())));
     }
 
+    public List<Prueba> getPruebasByVehiculoEnPeriodo(Integer idVehiculo,
+                                         LocalDateTime fechaDesde,
+                                         LocalDateTime fechaHasta){
+
+        List<Prueba> pruebasSinFiltrar = pruebaRepository.findByVehiculo(idVehiculo).stream()
+                .filter(prueba -> prueba.getFechaHoraFin() != null)
+                .toList();
+
+
+        return pruebasSinFiltrar.stream()
+                .filter(prueba -> fechaDesde.isBefore(prueba.getFechaHoraInicio()) && fechaHasta.isAfter(prueba.getFechaHoraFin()))
+                .toList();
+    }
+
+    public Double calcularKmVehiculoDesdeHasta(List<Prueba> pruebas){
+
+        double kmTotales = 0.0;
+
+        Coordenada coordenadaAgencia = posicionService.getCoordenadaAgencia();
+
+        Integer idVehiculo = pruebas.get(0).getIdVehiculo().getId();
+
+        // En prueba -> Buscar posiciones del vehiculo entre el inicio y fin de esa prueba
+        // -> Tendriamos los km totales de esa prueba
+        for (int i=0; i < pruebas.size(); i++){
+            List<PosicionDto> posiciones = posicionService.getPosicionByVehiculo(idVehiculo);
+            int finalI = i;
+            List<PosicionDto> posicionesEnIntervalo = posiciones.stream()
+                    .filter(posicionDto ->
+                            posicionDto.getFechaHora().isAfter(pruebas.get(finalI).getFechaHoraInicio())
+                                    && posicionDto.getFechaHora().isBefore(pruebas.get(finalI).getFechaHoraFin()))
+                    .toList();
+
+            // Buscamos todas las posiciones
+            for (int j=0; j < posicionesEnIntervalo.size(); j++){
+                Coordenada coordenada = new Coordenada(posicionesEnIntervalo.get(j).getLatitud(), posicionesEnIntervalo.get(j).getLongitud());
+                // Primera se calcula con agencia
+                if (j == 0){
+                    kmTotales += posicionService.calcularDistancia(coordenadaAgencia, coordenada);
+                } // Intermedios entre ellos
+                else if (j<posicionesEnIntervalo.size()-1){
+                    Coordenada cordAux = new Coordenada(posicionesEnIntervalo.get(j-1).getLatitud(), posicionesEnIntervalo.get(j-1).getLongitud());
+                    kmTotales += posicionService.calcularDistancia(cordAux, coordenada);
+                } else if(j == posicionesEnIntervalo.size()-1) { // Final con agencia
+                    kmTotales += posicionService.calcularDistancia(coordenada, coordenadaAgencia);
+                }
+                // Si no tiene se mantiene en 0
+                }
+            }
+
+
+        return kmTotales;
+
+    }
+
+    public void setearAgencia(Agencia agencia){
+        posicionService.setAgencia(agencia);
+    }
 
     public List<PruebaDto> getByVehiculo(Integer idVehiculo){
         return pruebaRepository.findByVehiculo(idVehiculo).stream().map(PruebaDto::new).toList();

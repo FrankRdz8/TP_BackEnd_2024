@@ -1,5 +1,6 @@
 package com.example.tpi_grupo58.Controladores;
 
+import com.example.tpi_grupo58.Entidades.Coordenadas.Agencia;
 import com.example.tpi_grupo58.Entidades.Prueba;
 import com.example.tpi_grupo58.Entidades.dtos.PruebaDto;
 import com.example.tpi_grupo58.Entidades.dtos.VehiculoDto;
@@ -40,6 +41,38 @@ public class PruebaController {
         }
 
         return new ResponseEntity<>(mapa.get("prueba"), HttpStatus.CREATED);
+    }
+
+
+    @GetMapping("/kmByVehiculoEnPeriodo")
+    public ResponseEntity<Double> getKmVehiculoEnPeriodo(
+            @RequestParam Integer idVehiculo,
+            @RequestParam LocalDateTime fechaDesde,
+            @RequestParam LocalDateTime fechaHasta
+    ){
+        // Buscar todas pruebas del vehiculo en periodo
+        List<Prueba> pruebas = pruebaService.getPruebasByVehiculoEnPeriodo(idVehiculo, fechaDesde, fechaHasta);
+
+        // Seteamos la agencia para calcular los km
+        try {
+            RestTemplate rest = new RestTemplate();
+
+            ResponseEntity<Agencia> res = rest.getForEntity(
+                    "https://labsys.frc.utn.edu.ar/apps-disponibilizadas/backend/api/v1/configuracion/", Agencia.class
+            );
+            if (res.getStatusCode().is2xxSuccessful()) {
+                pruebaService.setearAgencia(res.getBody());
+            }
+
+        } catch (HttpClientErrorException ex) {
+            ex.printStackTrace();
+        }
+
+        if (pruebas.isEmpty()){
+            return ResponseEntity.noContent().build();
+        }
+        // Calcular los km
+        return ResponseEntity.ok(pruebaService.calcularKmVehiculoDesdeHasta(pruebas));
     }
 
     @GetMapping("/incidentesByEmpleado")

@@ -43,7 +43,6 @@ public class NotificacionController {
 
     //  Reporte de incidentes por empleado
     // Incidente -> Prueba -> Empleado
-
     @PostMapping("/empleado")
     public ResponseEntity<List<Map<String, Object>>> getIncidentesPorEmpleado(
             @RequestBody List<Integer> idsPruebas

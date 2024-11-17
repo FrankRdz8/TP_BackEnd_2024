@@ -23,9 +23,7 @@ public class InteresadoService {
     public Optional<InteresadoDto> getById(Integer id) {
         Optional<Interesado> interesado = interesadoRepository.findById(id);
 
-        return interesado.isEmpty()
-                ? Optional.empty()
-                : Optional.of(new InteresadoDto(interesado.get()));
+        return interesado.map(InteresadoDto::new);
     }
 
 

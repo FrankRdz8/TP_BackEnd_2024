@@ -19,21 +19,10 @@ public class EmpleadoService {
         this.empleadoRepository = empleadoRepository;
     }
 
-
-    public List<EmpleadoDto> getAll(){
-        return empleadoRepository.findAll().stream().map(empleado -> new EmpleadoDto(empleado)).toList();
-    }
-
     public Optional<EmpleadoDto> getById(Integer id) {
         Optional<Empleado> empleado = empleadoRepository.findById(id);
 
-        return empleado.isEmpty()
-                ? Optional.empty()
-                : Optional.of(new EmpleadoDto(empleado.get()));
+        return empleado.map(EmpleadoDto::new);
     }
-
-
-
-
 
 }
