@@ -37,7 +37,7 @@ public class PosicionController {
         this.posicionService = posicionService;
     }
 
-    // Requerimiento 4
+    // Requerimiento d - Recibir posicion y avisar si se paso de limites
     @PostMapping("/aviso")
     public ResponseEntity<String> enviarMensajeVehiculoAlerta(@RequestParam Integer idVehiculo,
                                                               @RequestBody Coordenada coordenada) {

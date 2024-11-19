@@ -31,6 +31,7 @@ public class PruebaController {
         this.pruebaService = pruebaService;
     }
 
+    // Requerimiento a - Añadir prueba
     @PostMapping
     public ResponseEntity<Object> addPrueba(@Valid @RequestBody PruebaDto prueba){
 
@@ -43,7 +44,7 @@ public class PruebaController {
         return new ResponseEntity<>(mapa.get("prueba"), HttpStatus.CREATED);
     }
 
-
+    // Requerimiento f.iii. - Km de prueba que hizo un vehiculo en un periodo
     @GetMapping("/kmByVehiculoEnPeriodo")
     public ResponseEntity<Double> getKmVehiculoEnPeriodo(
             @RequestParam Integer idVehiculo,
@@ -75,6 +76,7 @@ public class PruebaController {
         return ResponseEntity.ok(pruebaService.calcularKmVehiculoDesdeHasta(pruebas));
     }
 
+    // Requerimiento f.ii. - Incidentes por empleado
     @GetMapping("/incidentesByEmpleado")
     public ResponseEntity<List<Map<String, Object>>> getIncidentesByEmpleado(
             @RequestParam Integer idEmpleado
@@ -106,10 +108,9 @@ public class PruebaController {
         }
 
         return ResponseEntity.noContent().build();
-
     }
 
-
+    // Requerimiento b - Listar pruebas en un momento dado
     @GetMapping("/byFecha")
     public ResponseEntity<Object> getPruebasFechaActual(@RequestParam LocalDateTime fecha){
         List<PruebaDto> pruebas = pruebaService.getPruebasFechaDada(fecha);
@@ -119,6 +120,7 @@ public class PruebaController {
                 : ResponseEntity.ok(pruebas);
     }
 
+    // Requerimiento f.iv. - Listar pruebas de un vehiculo
     @GetMapping("/byVehiculo")
     public ResponseEntity<List<PruebaDto>> getPruebasByVehiculo(@RequestParam Integer idVehiculo){
         List<PruebaDto> pruebas = pruebaService.getByVehiculo(idVehiculo);
@@ -128,6 +130,7 @@ public class PruebaController {
                 : ResponseEntity.ok(pruebas);
     }
 
+    // Requerimiento c - Finalizar prueba
     @PatchMapping("/{id}")
     public ResponseEntity<PruebaDto> finalizarPrueba(
             @PathVariable Integer id,

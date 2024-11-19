@@ -31,18 +31,17 @@ public class NotificacionController {
         this.telefonoService = telefonoService;
     }
 
-    // Reporte de incidentes
-    @GetMapping("/avisos")
+    // Requerimiento f.i. - Reporte de incidentes
+    @GetMapping("/incidentes")
     public ResponseEntity<List<NotificacionAvisoDto>> getIncidentes(){
-        List<NotificacionAvisoDto> avisos = notificacionService.getAll();
+        List<NotificacionAvisoDto> incidentes = notificacionService.getAll();
 
-        return avisos.isEmpty()
+        return incidentes.isEmpty()
                 ? ResponseEntity.noContent().build()
-                : ResponseEntity.ok(avisos);
+                : ResponseEntity.ok(incidentes);
     }
 
-    //  Reporte de incidentes por empleado
-    // Incidente -> Prueba -> Empleado
+    // Complemento de Requerimiento f.ii. Reporte de incidentes por empleado
     @PostMapping("/empleado")
     public ResponseEntity<List<Map<String, Object>>> getIncidentesPorEmpleado(
             @RequestBody List<Integer> idsPruebas
@@ -54,7 +53,7 @@ public class NotificacionController {
         return ResponseEntity.ok(incidentes);
     }
 
-
+    // Complemento del Req. d
     @PostMapping("/aviso")
     public ResponseEntity<NotificacionAviso> guardarNotificacionAviso(
             @RequestBody Map<String, String> mapa) {
@@ -69,6 +68,7 @@ public class NotificacionController {
         return new ResponseEntity<>(notificacionService.guardarNotificacion(notificacionAviso), HttpStatus.CREATED);
     }
 
+    // Requerimiento e
     @PostMapping("/promo")
     public ResponseEntity<List<PromoTelefonoDto>> enviarPromo(@RequestParam Integer idPromo,
                                                               @RequestBody List<TelefonoDto> telefonos) {

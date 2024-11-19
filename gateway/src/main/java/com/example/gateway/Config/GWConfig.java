@@ -10,9 +10,7 @@ import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 @Configuration
 public class GWConfig {
 
-    // Empleado crea pruebas y manda notificaciones
-    // Vehiculo envia posiciones
-    // Administrador ver reportes
+
     @Bean
     public RouteLocator configureRoutes(RouteLocatorBuilder builder,
                                         @Value("${gateway.url-microservicio-notificaciones}") String uriNotificaciones,
