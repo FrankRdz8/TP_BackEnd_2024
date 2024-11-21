@@ -17,7 +17,8 @@ public class GWConfig {
                                         @Value("${gateway.url-microservicio-tpi_grupo58}") String uriTpiGrupo58) {
         return builder.routes()
                 .route(r -> r.path("/api/notificaciones/**").uri(uriNotificaciones))
-                .route(r -> r.path("/api/tpi_grupo58/**").uri(uriTpiGrupo58))
+                .route(r -> r.path("/api/pruebas/**").uri(uriTpiGrupo58))
+                .route(r -> r.path("/api/posicion/**").uri(uriTpiGrupo58))
                 .build();
     }
 }
